@@ -1,0 +1,61 @@
+services:
+
+  mariadb:                                #nom du service
+    build: ./requirements/mariadb         #path ou se trouve le Dockerfile
+    container_name: mariadb               #nom du conteneur(serre pour le cmd docker et l'identification sur le reseau docker)
+    env_file: .env                        #fichier ou se trouve les VAR d'env. a ajouter aux VAR du conteneur
+    networks:
+      - inception                         #reseau docker ou va etre le conteneur mariadb
+    volumes:
+      - mariadbVol:/var/lib/mysql         #nom du volume pour l'identifier dans la partie "volumes" de docker-compose et ou va etre ce volume(repertoire) dans le conteneur (base de donnees de Mariadb)
+    restart: unless-stopped               #redemarre tant qu'il n'est pas stoppé manuellement
+    expose:
+      - "3306"                            #port d'exposition du conteneur mariadb a l'interieur du reseau docker "inception"
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    env_file: .env
+    networks:
+      - inception
+    volumes:
+      - wordpressVol:/var/www/wordpress
+    depends_on:
+      - mariadb
+    restart: on-failure                   #conteneur redemarre uniquement lors d'un crash
+    expose:
+      - "9000"                            #port d'exposition du conteneur -> dans la config de gninx, fastCGI envoit les requettes qu port 9000 
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    networks:
+      - inception
+    volumes:
+      - wordpressVol:/var/www/wordpress
+    depends_on:
+      - wordpress
+    restart: on-failure
+    ports:
+      - "443:443"                         #mapping de port -> creer le lien entre le port hote 443 et le port d' ecoute de nginx
+
+
+#parametrage des volumes, notamment pour faire le lien entre le volume de l'hote (stockage reel) et le path correspondant a ce volume sur le conteneur (dossiers partages)
+volumes:
+  mariadbVol:                             #identifie le volume a parametre
+    driver: local                         #indique que nous allons stocker le volumes en local (sur l'hote)
+    driver_opts:
+      type: 'none'                        #aucun type specifique de fichier pour ce volume
+      o: 'bind'                           # o -> option : 'bind' -> lien, indique que ca sera en dossier partage (~ lien symbolique)
+      device: '/home/pbret/data/mariadb'  #path sur hote (vm) ou se trouverons la base de donnees mariadb
+  wordpressVol:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/pbret/data/wordpress'
+
+
+networks:
+ inception:
+    driver: bridge

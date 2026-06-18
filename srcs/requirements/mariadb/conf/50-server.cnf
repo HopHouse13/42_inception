@@ -1,0 +1,17 @@
+[mysqld]									# réglages lus par le daemon mysqld (le "d" = daemon)
+											# mode "mysqld" choisi car la base de donnees doit
+											# etre disponible a tout moment pour wordpress.
+							
+user			= mysql						#  nom du user
+pid-file		= /run/mysqld/mysqld.pid
+basedir			= /usr
+datadir			= /var/lib/mysql
+socket			= /run/mysqld/mysqld.sock	# indique ou se trouve la socket pour communiquer
+bind_address	= *							# indique que toutes les ip peuvent se connecter
+port			= 3306						# indique le port d'ecoute
+#tmpdir			= /tmp
+
+
+expire_logs_days        = 10				# l'historique est supprimer au bout de 10 jours
+character-set-server  = utf8mb4				# defini le set par default des caracteres gere
+collation-server      = utf8mb4_general_ci
