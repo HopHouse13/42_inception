@@ -55,6 +55,12 @@ docker compose -f <compose_file_path> down           # stop and remove container
 docker compose -f <compose_file_path> start          # restart stopped containers
 docker compose -f <compose_file_path> stop           # pause the containers
 docker compose -f <compose_file_path> ps             # show containers status
+
+# Modern cmd
+docker init				# Automatically generates a Dockerfile, compose.yaml, and .dockerignore based on the service technology you choose
+docker compose watch	# Watches your source code and updates the container on the fly
+docker debug			# Integrates a debug shell into any container/image, even without a built-in shell. Brings its own toolbox (vim, curl, htop, etc)
+docker buildx cloud		# Remote Docker image build management (faster, lighter)
 ```
 
 ## Database (MariaDB)
