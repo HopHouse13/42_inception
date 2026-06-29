@@ -25,7 +25,6 @@ make
 | `make stop` / `make start` | Pause / restart |
 | `make re` | Rebuilds everything |
 | `make clean` | Prunes Docker + removes volumes and data |
-
 ## commands
 
 ```bash

@@ -37,7 +37,7 @@ services:
       - wordpress
     restart: on-failure
     ports:
-      - "443:443"                         #mapping de port -> creer le lien entre le port hote 443 et le port d' ecoute de nginx
+      - "443:443"                         #mapping de port -> creer le lien entre le port hote 443 et le port d'ecoute de nginx
 
 
 #parametrage des volumes, notamment pour faire le lien entre le volume de l'hote (stockage reel) et le path correspondant a ce volume sur le conteneur (dossiers partages)
